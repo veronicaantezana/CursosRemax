@@ -2,7 +2,6 @@
   <AdminLayout title="Crear Categoría" subtitle="Añade una nueva categoría de cursos">
     <div class="max-w-2xl mx-auto px-4 sm:px-6">
 
-      <!-- Mensajes de éxito/error -->
       <div v-if="$page.props?.flash?.success"
         class="p-4 mb-6 bg-green-100 border border-green-400 text-green-700 rounded-lg">
         <i class="pi pi-check-circle mr-2"></i>
@@ -128,7 +127,7 @@ const cancelar = () => {
 }
 
 :deep(.p-inputtext::placeholder) {
-  /* Establece el peso de la fuente a normal (no negrita) */
+  
   color: #a0a0a0 !important;
 }
 
