@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('categoria_id')->constrained('categorias')->onDelete('cascade');
             $table->string('nombre');
+            $table->string('descripcion')->nullable();
             $table->integer('tiempoVigencia');
             $table->decimal('calificacion',5,2)->nullable();
             $table->timestamps();

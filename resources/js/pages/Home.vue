@@ -1,6 +1,8 @@
 <script setup>
 import CategoryTabs from '@/components/Categoria/CategoryTabs.vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
 import { ref } from 'vue'
+
 
 const categories = [
   { name: 'Marketing y Comunicación', slug: 'marketing-comunicacion' },

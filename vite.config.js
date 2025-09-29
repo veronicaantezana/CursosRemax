@@ -5,7 +5,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
     plugins: [
-         vue({
+        tailwindcss(),
+        vue({
             template: {
                 transformAssetUrls: {
                     base: null,
@@ -17,7 +18,7 @@ export default defineConfig({
             input: ['resources/css/app.css', 'resources/js/app.js'],
             refresh: true,
         }),
-        tailwindcss(),
+        
     ],
     resolve: {
         alias: {

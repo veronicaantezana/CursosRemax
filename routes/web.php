@@ -21,3 +21,4 @@ Route::get('/guardados', function () {
 
 
 require __DIR__ . '/cursos.php';
+require __DIR__ . '/admin.php';
