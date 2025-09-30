@@ -18,9 +18,13 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'username',
+        'name_to_show', 
+        'first_name',
+        'last_name',
+        'role_id',
+        'role',
+        'external_id'
     ];
 
     /**
@@ -29,8 +33,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        
     ];
 
     /**
@@ -42,7 +45,63 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            //'password' => 'hashed',
         ];
+    }
+     public function getAuthPassword()
+    {
+        return '';
+    }
+    /**
+     * Get the name of the unique identifier for the user.
+     * Usamos 'username' en lugar de 'email'
+     */
+    public function getAuthIdentifierName()
+    {
+        return 'username';
+    }
+     /**
+     * Para Passport/OAuth - siempre válido ya que la auth es externa
+     */
+    public function validateForPassportPasswordGrant($password)
+    {
+        return true;
+    }
+
+     public function isAdmin()
+    {
+        return $this->role_id === 2;
+    }
+
+    /**
+     * Verificar si es Agente
+     */
+    public function isAgent()
+    {
+        return $this->role_id === 4;
+    }
+
+    /**
+     * Relación: Un usuario (ADMIN) puede crear muchas categorías
+     */
+    public function categories()
+    {
+        return $this->hasMany(Categoria::class, 'created_by');
+    }
+
+    /**
+     * Relación: Un usuario (ADMIN) puede crear muchos cursos
+     */
+    public function courses()
+    {
+        return $this->hasMany(Curso::class, 'created_by');
+    }
+
+    /**
+     * Attribute para obtener el tipo de usuario
+     */
+    public function getTypeAttribute()
+    {
+        return $this->isAdmin() ? 'admin' : 'agent';
     }
 }

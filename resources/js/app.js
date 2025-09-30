@@ -5,6 +5,7 @@ import PrimeVue from 'primevue/config'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Card from 'primevue/card'
+import { createPinia } from 'pinia';
 import ConfirmationService from 'primevue/confirmationservice'
 import { library, config } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -22,12 +23,13 @@ createInertiaApp({
     return page
   },
   setup({ el, App, props, plugin }) {
+    const pinia = createPinia();
     createApp({ render: () => h(App, props) })
-      .use(PrimeVue, {
-    unstyled: true  // ← Esto desactiva los estilos de PrimeVue
-  })
+      .use(pinia)
       .use(plugin)
-      .use(PrimeVue)
+      .use(PrimeVue, {
+        unstyled: true  // ← Esto desactiva los estilos de PrimeVue
+      })
       .use(ConfirmationService)
       .component('font-awesome-icon', FontAwesomeIcon)
       .mount(el)

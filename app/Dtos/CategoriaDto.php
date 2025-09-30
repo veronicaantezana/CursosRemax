@@ -5,7 +5,8 @@ namespace App\DTOs;
 class CategoriaDto
 {
     public function __construct(
-        public string $nombre
+        public string $nombre,
+        public ?int $created_by = null
     ) {}
 
     public static function fromRequest(array $data): self
@@ -18,7 +19,8 @@ class CategoriaDto
     public function toArray(): array
     {
         return [
-            'nombre' => $this->nombre
+            'nombre' => $this->nombre,
+            'created_by' => $this->created_by
         ];
     }
 }

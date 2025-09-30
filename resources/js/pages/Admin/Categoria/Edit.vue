@@ -18,7 +18,6 @@
                 <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
                     <div class="flex items-center gap-2">
                         <i class="pi pi-pencil text-blue-500"></i>
-                        <span class="text-lg font-semibold text-gray-900">Editar Categoría</span>
                     </div>
                 </div>
 

@@ -26,6 +26,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
+         if (!externalAuth() || !isAdmin()) {
+        return redirect('/login');
+    }
         $categorias = $this->categoriaService->getAll();
 
         return Inertia::render('Admin/Categoria/Index', [
@@ -38,6 +41,10 @@ class CategoryController extends Controller
      */
     public function create()
     {
+        if (!externalAuth() || !isAdmin()) {
+            return redirect('/login');
+        }
+
         return Inertia::render('Admin/Categoria/Create');
     }
 
@@ -46,21 +53,21 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoriaRequest $request): RedirectResponse
     {
-        try {
-            // Crear DTO desde el request validado
-            $dto = CategoriaDto::fromRequest($request->validated());
+        if (!externalAuth() || !isAdmin()) {
+            return redirect('/login');
+        }
 
+        try {
+            $validated = $request->validated();
+            // Crear DTO desde el request validado
+            $dto = CategoriaDto::fromRequest(array_merge($validated, [
+                'created_by' => currentUser()['id'] // ← ID del usuario logueado
+            ]));
             // Usar el servicio para crear la categoría
             $categoria = $this->categoriaService->create($dto);
 
-            if (!$categoria) {
-                return redirect()->back()
-                    ->with('error', 'Error al crear la categoría.')
-                    ->withInput();
-            }
-
             return redirect()->route('admin.categories.index')
-                ->with('success', ' Categoría creada exitosamente');
+                ->with('success', 'Categoría creada exitosamente');
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', ' Error al crear la categoría: ' . $e->getMessage())
@@ -69,6 +76,9 @@ class CategoryController extends Controller
     }
     public function edit(string $id)
     {
+        if (!externalAuth() || !isAdmin()) {
+            return redirect('/login');
+        }
         $categoria = $this->categoriaService->findById($id);
 
         if (!$categoria) {
@@ -82,6 +92,10 @@ class CategoryController extends Controller
     }
     public function update(UpdateCategoriaRequest $request, string $id): RedirectResponse
     {
+        if (!externalAuth() || !isAdmin()) {
+            return redirect('/login');
+        }
+
         try {
             // Crear DTO desde el request validado
             $dto = CategoriaDto::fromRequest($request->validated());
@@ -106,6 +120,10 @@ class CategoryController extends Controller
 
     public function destroy(string $id): RedirectResponse
     {
+        if (!externalAuth() || !isAdmin()) {
+            return redirect('/login');
+        }
+
         try {
             // Usar el servicio para eliminar la categoría
             $deleted = $this->categoriaService->delete($id);

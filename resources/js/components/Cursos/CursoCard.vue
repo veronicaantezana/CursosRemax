@@ -1,4 +1,5 @@
 <template>
+  
   <Card style="width: 25rem; overflow: hidden" class="curso-card">
     <template #header>
       <img :alt="curso.titulo" :src="curso.imagen" class="w-full h-48 object-cover" />
