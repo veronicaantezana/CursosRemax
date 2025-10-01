@@ -10,7 +10,7 @@
         <div class="px-4 py-2 text-xs font-semibold text-gray-400 uppercase">Principal</div>
         <Link href="/admin/dashboard"
           class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-          :class="{ 'bg-blue-50 text-blue-600 border-r-2 border-blue-600': $page.url.startsWith('/admin/dashboard') }">
+          :class="{ 'bg-blue-50 text-blue-600 border-r-2 border-blue-600': currentUrl.startsWith('/admin/dashboard') }">
         <i class="pi pi-home mr-3"></i>
         Dashboard
         </Link>
@@ -18,13 +18,13 @@
         <div class="px-4 py-2 text-xs font-semibold text-gray-400 uppercase">Gestión</div>
         <Link href="/admin/categorias"
           class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-          :class="{ 'bg-blue-50 text-blue-600 border-r-2 border-blue-600': $page.url.startsWith('/admin/categorias') }">
+          :class="{ 'bg-blue-50 text-blue-600 border-r-2 border-blue-600': currentUrl.startsWith('/admin/categorias') }">
         <i class="pi pi-tags mr-3"></i>
         Categorías
         </Link>
         <Link href="/admin/cursos"
           class="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-          :class="{ 'bg-blue-50 text-blue-600 border-r-2 border-blue-600': $page.url.startsWith('/admin/cursos') }">
+          :class="{ 'bg-blue-50 text-blue-600 border-r-2 border-blue-600': currentUrl.startsWith('/admin/cursos') }">
         <i class="pi pi-book mr-3"></i>
         Cursos
         </Link>
@@ -75,15 +75,20 @@
   </div>
 </template>
 
+
 <script setup>
-import { Link } from '@inertiajs/vue3'
+import { Link, usePage } from '@inertiajs/vue3'
 import Button from 'primevue/button'
 import { useAuthStore } from '@/stores/authStore'
 import { computed } from 'vue'
+
+const page = usePage()
 const authStore = useAuthStore()
+
+const currentUrl = computed(() => page.url)
 const user = computed(() => {
-  if ($page.props.auth?.user) {
-    return $page.props.auth.user
+  if (page.props.auth?.user) {
+    return page.props.auth.user
   }
   if (authStore.user) {
     return authStore.user
@@ -105,7 +110,7 @@ const logout = async () => {
   if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
     try {
       await authStore.logout()
-      // El logout ya redirige automáticamente a /login desde el store
+      
     } catch (error) {
       console.error('Error al cerrar sesión:', error)
     }

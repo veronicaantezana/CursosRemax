@@ -6,13 +6,14 @@ class CategoriaDto
 {
     public function __construct(
         public string $nombre,
-        public ?int $created_by = null
+        //public ?int $created_by = null
     ) {}
 
     public static function fromRequest(array $data): self
     {
         return new self(
-            nombre: $data['nombre']
+            nombre: $data['nombre'],
+           // created_by: $data['created_by']
         );
     }
 
@@ -20,7 +21,7 @@ class CategoriaDto
     {
         return [
             'nombre' => $this->nombre,
-            'created_by' => $this->created_by
+            //'created_by' => $this->created_by
         ];
     }
 }

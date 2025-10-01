@@ -1,9 +1,6 @@
 <template>
     <form @submit.prevent="$emit('submit', form)" class="space-y-6">
-        <UserTypeSelector 
-            v-model="form.userType"
-            :error="errors.userType"
-        />
+        
 
         <FormInput
             v-model="form.username"

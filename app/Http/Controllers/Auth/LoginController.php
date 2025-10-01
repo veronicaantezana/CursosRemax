@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class LoginController extends Controller
 {
@@ -30,9 +31,9 @@ class LoginController extends Controller
             );
 
             if (!$authData) {
-                return response()->json([
-                    'error' => 'Credenciales incorrectas'
-                ], 401);
+                  return back()->withErrors([
+                    'username' => 'Credenciales incorrectas'
+                ]);
             }
 
             // 3. Sincronizar usuario en base de datos local
@@ -57,13 +58,8 @@ class LoginController extends Controller
                 'username' => $user->username
             ]);
 
-            // 5. Devolver respuesta con redirección
-            return response()->json([
-                'status' => 'success',
-                'user' => $user,
-                'redirect_to' => $this->getRedirectPath($user->role_id)
-            ]);
-
+             //return Inertia::location($this->getRedirectPath($user->role_id));
+ return redirect($this->getRedirectPath($user->role_id));
         } catch (\Exception $e) {
             Log::error('Error en proceso de login', [
                 'username' => $request->username,
@@ -71,9 +67,9 @@ class LoginController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
 
-            return response()->json([
-                'error' => 'Error interno del servidor'
-            ], 500);
+            return back()->withErrors([
+                'message' => 'Error interno del servidor'
+            ]);
         }
     }
 
@@ -87,11 +83,12 @@ class LoginController extends Controller
     }
 
     public function logout(Request $request)
-    {
-        Auth::logout();
+    { Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return response()->json(['status' => 'success']);
+        
+       // return Inertia::location('/login');
+       return redirect('/login');
     }
 }

@@ -11,6 +11,7 @@ import { library, config } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faBookmark } from '@fortawesome/free-solid-svg-icons'
 import 'primeicons/primeicons.css';
+import Tooltip from 'primevue/tooltip';
 
 
 config.autoAddCss = false
@@ -31,6 +32,7 @@ createInertiaApp({
         unstyled: true  // ← Esto desactiva los estilos de PrimeVue
       })
       .use(ConfirmationService)
+      .directive('tooltip', Tooltip)
       .component('font-awesome-icon', FontAwesomeIcon)
       .mount(el)
   },

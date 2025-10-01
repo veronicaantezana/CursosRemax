@@ -32,7 +32,7 @@ class ExternalAuthService
                 // Si la API devuelve status success
                 if ($data['status'] === 'success') {
 
-                    //  CORRECCIÓN: La API tiene estructuras inconsistentes
+                   
                     // Caso 1: Datos directamente en el objeto principal (admin)
                     if (isset($data['user_id'])) {
                         Log::debug(' ESTRUCTURA ADMIN DETECTADA');

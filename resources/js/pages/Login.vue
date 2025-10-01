@@ -18,7 +18,7 @@
         <div v-if="authStore.error" class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
             <div class="flex items-center space-x-3">
                 <i class="pi pi-exclamation-triangle text-red-500 text-xl"></i>
-                <span class="text-red-700 font-medium">{{ authStore.error }}</span>
+                <span class="text-red-700 font-medium">Credenciales incorrectas</span>
             </div>
         </div>
 

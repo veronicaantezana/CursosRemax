@@ -6,6 +6,7 @@ use App\DTOs\CategoriaDto;
 use App\Models\Categoria;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 
 class CategoriaService
 {
@@ -24,9 +25,15 @@ class CategoriaService
     /**
      * Obtener categoría por ID
      */
+    /**
+     * Obtener categoría por ID
+     */
     public function findById(int $id): ?Categoria
     {
-        return $this->categoriaModel->find($id);
+        Log::info('Buscando categoría por ID', ['id' => $id, 'tipo' => gettype($id)]);
+        $categoria = $this->categoriaModel->find($id);
+        Log::info('Resultado búsqueda', ['encontrado' => !is_null($categoria)]);
+        return $categoria;
     }
 
     /**
@@ -42,13 +49,38 @@ class CategoriaService
      */
     public function update(int $id, CategoriaDto $dto): bool
     {
+        Log::info('Service update - Iniciando', [
+            'id' => $id,
+            'type' => gettype($id),
+            'dto' => $dto->toArray()
+        ]);
+
         $categoria = $this->findById($id);
-        
+
         if (!$categoria) {
+            Log::warning('Service update - Categoría no encontrada', ['id' => $id]);
             return false;
         }
 
-        return $categoria->update($dto->toArray());
+        // DEBUG TEMPORAL - QUITAR DESPUÉS  
+        Log::info('Service update - Datos a actualizar', $dto->toArray());
+        Log::info('Service update - Estado antes', [
+            'nombre_actual' => $categoria->nombre
+        ]);
+
+        $categoria->nombre = $dto->nombre;
+        $result = $categoria->save();
+
+        // DEBUG TEMPORAL - QUITAR DESPUÉS
+        Log::info('Service update - Resultado', ['success' => $result]);
+        if ($result) {
+            $categoria->refresh();
+            Log::info('Service update - Estado después', [
+                'nombre_nuevo' => $categoria->nombre
+            ]);
+        }
+
+        return $result;
     }
 
     /**
@@ -57,7 +89,7 @@ class CategoriaService
     public function delete(int $id): bool
     {
         $categoria = $this->findById($id);
-        
+
         if (!$categoria) {
             return false;
         }

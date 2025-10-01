@@ -11,6 +11,8 @@ use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use App\Services\CategoriaService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
@@ -26,9 +28,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-         if (!externalAuth() || !isAdmin()) {
-        return redirect('/login');
-    }
+        if (!Auth::check() || Auth::user()->role_id !== 2) {
+            return redirect('/login');
+        }
         $categorias = $this->categoriaService->getAll();
 
         return Inertia::render('Admin/Categoria/Index', [
@@ -41,7 +43,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        if (!externalAuth() || !isAdmin()) {
+        if (!Auth::check() || Auth::user()->role_id !== 2) {
             return redirect('/login');
         }
 
@@ -53,18 +55,23 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoriaRequest $request): RedirectResponse
     {
-        if (!externalAuth() || !isAdmin()) {
+        if (!Auth::check() || Auth::user()->role_id !== 2) {
             return redirect('/login');
         }
 
+
         try {
+
             $validated = $request->validated();
             // Crear DTO desde el request validado
+            // DEBUG 1: Ver los datos validados
+
             $dto = CategoriaDto::fromRequest(array_merge($validated, [
-                'created_by' => currentUser()['id'] // ← ID del usuario logueado
+                'created_by' => Auth::user()->id // ← ID del usuario logueado
             ]));
-            // Usar el servicio para crear la categoría
+
             $categoria = $this->categoriaService->create($dto);
+
 
             return redirect()->route('admin.categories.index')
                 ->with('success', 'Categoría creada exitosamente');
@@ -76,7 +83,7 @@ class CategoryController extends Controller
     }
     public function edit(string $id)
     {
-        if (!externalAuth() || !isAdmin()) {
+        if (!Auth::check() || Auth::user()->role_id !== 2) {
             return redirect('/login');
         }
         $categoria = $this->categoriaService->findById($id);
@@ -92,16 +99,21 @@ class CategoryController extends Controller
     }
     public function update(UpdateCategoriaRequest $request, string $id): RedirectResponse
     {
-        if (!externalAuth() || !isAdmin()) {
+        if (!Auth::check() || Auth::user()->role_id !== 2) {
             return redirect('/login');
         }
 
         try {
-            // Crear DTO desde el request validado
+            if (!is_numeric($id)) {
+                return redirect()->back()
+                    ->with('error', 'ID de categoría inválido.')
+                    ->withInput();
+            }
+
             $dto = CategoriaDto::fromRequest($request->validated());
 
             // Usar el servicio para actualizar la categoría
-            $updated = $this->categoriaService->update($id, $dto);
+            $updated = $this->categoriaService->update((int)$id, $dto);
 
             if (!$updated) {
                 return redirect()->back()
@@ -120,9 +132,10 @@ class CategoryController extends Controller
 
     public function destroy(string $id): RedirectResponse
     {
-        if (!externalAuth() || !isAdmin()) {
+        if (!Auth::check() || Auth::user()->role_id !== 2) {
             return redirect('/login');
         }
+
 
         try {
             // Usar el servicio para eliminar la categoría

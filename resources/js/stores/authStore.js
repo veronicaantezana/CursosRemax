@@ -22,63 +22,65 @@ export const useAuthStore = defineStore('auth', {
             try {
                 console.log('Enviando credenciales al backend...');
 
-                const csrfToken = this.getCsrfToken();
-                const response = await fetch('/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+               await router.post('/login', credentials, {
+                    onSuccess: (page) => {
+                        this.user = page.props.auth?.user;
+                        this.error = null;
+                        console.log('Login exitoso con Inertia');
+                        
+                        // La redirección ya la maneja Laravel automáticamente
+                        // No necesitas redirigir manualmente
                     },
-                    body: JSON.stringify(credentials)
+                    onError: (errors) => {
+                        // Manejar errores de validación de Laravel
+                        if (errors.username) {
+                            this.error = errors.username[0];
+                        } else if (errors.password) {
+                            this.error = errors.password[0];
+                        } else {
+                            this.error = errors.message || 'Credenciales incorrectas';
+                        }
+                        console.log('Errores de login:', errors);
+                    }
                 });
 
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'Error en la autenticación');
-                }
-
-                if (data.status === 'success') {
-                    this.user = data.user;
-                    this.error = null;
-                    
-                    // Redirigir según lo que indique el backend
-                    if (data.redirect_to) {
-                        console.log('Redirigiendo a:', data.redirect_to);
-                        router.visit(data.redirect_to);
-                    }
-                    
-                    return true;
-                } else {
-                    throw new Error(data.error || 'Credenciales incorrectas');
-                }
-
             } catch (error) {
-                this.error = error.message;
-                return false;
+                this.error = 'Error de conexión';
+                console.error('Error en login:', error);
             } finally {
                 this.loading = false;
             }
         },
 
-        getCsrfToken() {
-            // Método 1: Buscar en meta tag
+           async logout() {
+            try {
+                // ✅ CAMBIO: Usar Inertia en lugar de fetch
+                await router.post('/logout');
+                this.user = null;
+            } catch (error) {
+                console.error('Error al cerrar sesión:', error);
+                this.user = null;
+                router.visit('/login');
+            }
+        },
+        /*getCsrfToken() {
+          
             const metaTag = document.querySelector('meta[name="csrf-token"]');
             if (metaTag) {
                 return metaTag.getAttribute('content');
             }
 
-            // Método 2: Buscar en cookies (Laravel guarda el token aquí)
+            // Laravel guarda el token 
             const cookieValue = document.cookie
                 .split('; ')
                 .find(row => row.startsWith('XSRF-TOKEN='))
                 ?.split('=')[1];
-            
+
             if (cookieValue) {
                 return decodeURIComponent(cookieValue);
             }
 
-            // Método 3: Usar el token de Inertia si está disponible
+            
             if (window.__INERTIA_CSRF_TOKEN) {
                 return window.__INERTIA_CSRF_TOKEN;
             }
@@ -89,23 +91,52 @@ export const useAuthStore = defineStore('auth', {
 
         async logout() {
             try {
-                await fetch('/logout', {
+                const csrfToken = this.getCsrfToken();
+
+                if (!csrfToken) {
+                    console.error('No se pudo obtener el token CSRF');
+                    
+                    router.post('/logout');
+                    return;
+                }
+
+                const response = await fetch('/logout', {
                     method: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    }
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin' 
                 });
-                
-                this.user = null;
-                router.visit('/login');
+
+                if (response.ok) {
+                    this.user = null;
+                    router.visit('/login');
+                } else {
+                    console.error('Error en logout:', response.status);
+                    
+                    router.visit('/login');
+                }
+
             } catch (error) {
                 console.error('Error al cerrar sesión:', error);
+                this.user = null;
+                router.visit('/login');
             }
         },
 
+      
+        async logoutWithInertia() {
+            try {
+                router.post('/logout');
+            } catch (error) {
+                console.error('Error al cerrar sesión:', error);
+            }
+        },*/
+
         initializeAuth() {
-            // El backend ya maneja la sesión via cookies/Laravel Auth
-            // Inertia se encargará de pasar el usuario automáticamente
+        
         }
     }
 });

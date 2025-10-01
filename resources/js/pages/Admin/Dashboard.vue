@@ -36,6 +36,8 @@
 
 <script setup>
 import AdminLayout from '@/Layouts/AdminLayout.vue'
-import { Link } from '@inertiajs/vue3'
+import { Link, usePage } from '@inertiajs/vue3'
 import Card from 'primevue/card'
+
+const page = usePage();
 </script>
