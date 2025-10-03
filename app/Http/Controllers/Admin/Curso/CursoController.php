@@ -30,16 +30,13 @@ class CursoController extends Controller
             abort(403, 'No autorizado');
         }
 
-        // Cambia getPaginated() por getAll() para que sea consistente con categorías
         $cursos = $this->cursoService->getAll();
 
         return Inertia::render('Admin/Curso/Index', [
             'cursos' => $cursos
         ]);
     }
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create(): Response
     {
         if (!Auth::check() || Auth::user()->role_id !== 2) {
@@ -53,9 +50,7 @@ class CursoController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(StoreCursoRequest $request): RedirectResponse
     {
         if (!Auth::check() || Auth::user()->role_id !== 2) {

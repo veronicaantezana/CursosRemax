@@ -16,6 +16,9 @@ return new class extends Migration
             $table->foreignId('curso_id')->constrained('cursos')->onDelete('cascade');
             $table->string('nombre');
             $table->integer('duracion')->nullable()->comment('Duración del tema en minutos');
+            $table->string('archivo_path')->nullable();
+            $table->string('url')->nullable();
+            $table->string('tipo_archivo')->nullable();
             $table->timestamps();
         });
     }

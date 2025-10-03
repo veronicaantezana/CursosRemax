@@ -10,8 +10,11 @@ import ConfirmationService from 'primevue/confirmationservice'
 import { library, config } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faBookmark } from '@fortawesome/free-solid-svg-icons'
+import ToggleSwitch from 'primevue/toggleswitch'
 import 'primeicons/primeicons.css';
 import Tooltip from 'primevue/tooltip';
+
+import Select from 'primevue/select';
 
 
 config.autoAddCss = false
@@ -34,6 +37,7 @@ createInertiaApp({
       .use(ConfirmationService)
       .directive('tooltip', Tooltip)
       .component('font-awesome-icon', FontAwesomeIcon)
+      .component('ToggleSwitch', ToggleSwitch)
       .mount(el)
   },
 });

@@ -14,8 +14,7 @@ class Curso extends Model
         'nombre',
         'descripcion', 
         'imagen', 
-        'tiempoVigencia',
-        'calificacion'
+        'tiempoVigencia'
     ];
 
     public function categoria()

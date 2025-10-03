@@ -6,10 +6,9 @@
           <h1 class="text-2xl font-bold text-gray-900">Crear Nuevo Curso</h1>
           <p class="text-gray-600">Completa la información del curso</p>
         </div>
-        <Link href="/admin/cursos"
-          class="text-gray-600 hover:text-gray-900 flex items-center gap-2">
-          <i class="pi pi-arrow-left"></i>
-          Volver a cursos
+        <Link href="/admin/cursos" class="text-gray-600 hover:text-gray-900 flex items-center gap-2">
+        <i class="pi pi-arrow-left"></i>
+        Volver a cursos
         </Link>
       </div>
 
@@ -26,20 +25,24 @@
         <template #content>
           <form @submit.prevent="submit" class="space-y-6 p-6">
             <!-- Categoría -->
+            <!-- Categoría -->
             <div class="space-y-2">
               <label for="categoria_id" class="block text-sm font-medium text-gray-700">
                 Categoría *
               </label>
-              <Dropdown 
-                v-model="form.categoria_id"
-                :options="categorias"
-                optionLabel="nombre"
-                optionValue="id"
-                placeholder="Selecciona una categoría"
-                class="w-full custom-dropdown"
-                :class="form.errors.categoria_id ? 'border-red-500' : ''"
-                showClear
-              />
+              <div class="relative">
+                <select v-model="form.categoria_id" id="categoria_id"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white text-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 shadow-sm appearance-none cursor-pointer hover:border-gray-400"
+                  :class="form.errors.categoria_id ? 'border-red-500' : ''">
+                  <option value="" disabled selected>Selecciona una categoría</option>
+                  <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.id">
+                    {{ categoria.nombre }}
+                  </option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+                  <i class="pi pi-chevron-down text-sm"></i>
+                </div>
+              </div>
               <p v-if="form.errors.categoria_id" class="text-red-600 text-sm mt-1">
                 {{ form.errors.categoria_id }}
               </p>
@@ -50,14 +53,8 @@
               <label for="nombre" class="block text-sm font-medium text-gray-700">
                 Nombre del Curso *
               </label>
-              <InputText
-                id="nombre"
-                v-model="form.nombre"
-                type="text"
-                class="w-full custom-input"
-                :class="form.errors.nombre ? 'border-red-500' : ''"
-                placeholder="Ej: Marketing Digital Avanzado"
-              />
+              <InputText id="nombre" v-model="form.nombre" type="text" class="w-full custom-input"
+                :class="form.errors.nombre ? 'border-red-500' : ''" placeholder="Ej: Marketing Digital Avanzado" />
               <p v-if="form.errors.nombre" class="text-red-600 text-sm mt-1">
                 {{ form.errors.nombre }}
               </p>
@@ -68,14 +65,9 @@
               <label for="descripcion" class="block text-sm font-medium text-gray-700">
                 Descripción
               </label>
-              <Textarea
-                id="descripcion"
-                v-model="form.descripcion"
-                rows="4"
-                class="w-full custom-textarea"
+              <Textarea id="descripcion" v-model="form.descripcion" rows="4" class="w-full custom-textarea"
                 :class="form.errors.descripcion ? 'border-red-500' : ''"
-                placeholder="Describe el contenido del curso, objetivos, etc."
-              />
+                placeholder="Describe el contenido del curso, objetivos, etc." />
               <p v-if="form.errors.descripcion" class="text-red-600 text-sm mt-1">
                 {{ form.errors.descripcion }}
               </p>
@@ -86,14 +78,9 @@
               <label for="imagen" class="block text-sm font-medium text-gray-700">
                 URL de la Imagen
               </label>
-              <InputText
-                id="imagen"
-                v-model="form.imagen"
-                type="text"
-                class="w-full custom-input"
+              <InputText id="imagen" v-model="form.imagen" type="text" class="w-full custom-input"
                 :class="form.errors.imagen ? 'border-red-500' : ''"
-                placeholder="https://ejemplo.com/imagen-curso.jpg"
-              />
+                placeholder="https://ejemplo.com/imagen-curso.jpg" />
               <p v-if="form.errors.imagen" class="text-red-600 text-sm mt-1">
                 {{ form.errors.imagen }}
               </p>
@@ -107,15 +94,8 @@
               <label for="tiempoVigencia" class="block text-sm font-medium text-gray-700">
                 Tiempo de Vigencia (días) *
               </label>
-              <InputNumber
-                id="tiempoVigencia"
-                v-model="form.tiempoVigencia"
-                class="w-full custom-inputnumber"
-                :class="form.errors.tiempoVigencia ? 'border-red-500' : ''"
-                placeholder="30"
-                :min="1"
-                :max="365"
-              />
+              <InputNumber id="tiempoVigencia" v-model="form.tiempoVigencia" class="w-full custom-inputnumber"
+                :class="form.errors.tiempoVigencia ? 'border-red-500' : ''" placeholder="30" :min="1" :max="365" />
               <p v-if="form.errors.tiempoVigencia" class="text-red-600 text-sm mt-1">
                 {{ form.errors.tiempoVigencia }}
               </p>
@@ -124,44 +104,17 @@
               </p>
             </div>
 
-            <!-- Calificación -->
-            <div class="space-y-2">
-              <label for="calificacion" class="block text-sm font-medium text-gray-700">
-                Calificación (0-5)
-              </label>
-              <InputNumber
-                id="calificacion"
-                v-model="form.calificacion"
-                class="w-full custom-inputnumber"
-                :class="form.errors.calificacion ? 'border-red-500' : ''"
-                placeholder="4.5"
-                :min="0"
-                :max="5"
-                :minFractionDigits="1"
-                :maxFractionDigits="1"
-              />
-              <p v-if="form.errors.calificacion" class="text-red-600 text-sm mt-1">
-                {{ form.errors.calificacion }}
-              </p>
-              <p class="text-xs text-gray-500 mt-1">
-                Calificación inicial del curso (opcional). Puede ser actualizada posteriormente.
-              </p>
-            </div>
+    
 
             <!-- Botones -->
             <div class="flex gap-3 pt-4">
-              <Link 
-                href="/admin/cursos"
-                class="flex-1 bg-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-400 transition-colors flex items-center justify-center gap-2 font-medium"
-              >
-                <i class="pi pi-times"></i>
-                Cancelar
+              <Link href="/admin/cursos"
+                class="flex-1 bg-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-400 transition-colors flex items-center justify-center gap-2 font-medium">
+              <i class="pi pi-times"></i>
+              Cancelar
               </Link>
-              <Button 
-                type="submit" 
-                :disabled="form.processing"
-                class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 font-medium disabled:opacity-50"
-              >
+              <Button type="submit" :disabled="form.processing"
+                class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 font-medium disabled:opacity-50">
                 <i class="pi pi-check" v-if="!form.processing"></i>
                 <i class="pi pi-spinner pi-spin" v-if="form.processing"></i>
                 {{ form.processing ? 'Creando...' : 'Crear Curso' }}
@@ -183,8 +136,7 @@ import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Textarea from 'primevue/textarea'
 import InputNumber from 'primevue/inputnumber'
-import Dropdown from 'primevue/dropdown'
-
+import CategoriaDropdown from '@/Components/Categoria/Dropdown.vue'
 const page = usePage()
 
 // Computed properties para flash messages
@@ -218,46 +170,15 @@ const submit = () => {
 </script>
 
 <style scoped>
-/* Estilos mejorados para los componentes PrimeVue */
-:deep(.custom-dropdown .p-dropdown) {
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  background: white;
-  width: 100%;
-  transition: all 0.2s;
+/* ESTILOS PARA ERRORES (se aplicarán automáticamente con la clase border-red-500) */
+:deep(.border-red-500 .p-autocomplete-input) {
+  border-color: #ef4444 !important;
 }
 
-:deep(.custom-dropdown .p-dropdown:not(.p-disabled):hover) {
-  border-color: #3b82f6;
+:deep(.border-red-500 .p-autocomplete-input:focus) {
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
 }
 
-:deep(.custom-dropdown .p-dropdown:not(.p-disabled).p-focus) {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-}
-
-:deep(.custom-dropdown .p-dropdown-panel) {
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  background: white;
-}
-
-:deep(.custom-dropdown .p-dropdown-items .p-dropdown-item) {
-  padding: 0.75rem 1rem;
-  color: #374151;
-  transition: all 0.2s;
-}
-
-:deep(.custom-dropdown .p-dropdown-items .p-dropdown-item.p-highlight) {
-  background: #3b82f6;
-  color: white;
-}
-
-:deep(.custom-dropdown .p-dropdown-items .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover) {
-  background: #f3f4f6;
-  color: #374151;
-}
 
 :deep(.custom-input .p-inputtext) {
   border: 1px solid #d1d5db;
@@ -334,7 +255,6 @@ const submit = () => {
   padding: 0;
 }
 
-/* Estilos para errores */
 :deep(.border-red-500) {
   border-color: #ef4444 !important;
 }

@@ -22,7 +22,7 @@ class UpdateCursoRequest extends FormRequest
             'descripcion' => 'nullable|string',
             'imagen' => 'nullable|string|max:500',
             'tiempoVigencia' => 'required|integer|min:1',
-            'calificacion' => 'nullable|numeric|min:0|max:5'
+            
         ];
     }
 }

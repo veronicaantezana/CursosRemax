@@ -8,8 +8,8 @@
         </div>
         <Link href="/admin/cursos/crear"
           class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
-          <i class="pi pi-plus"></i>
-          Nuevo Curso
+        <i class="pi pi-plus"></i>
+        Nuevo Curso
         </Link>
       </div>
 
@@ -20,8 +20,8 @@
             <p class="text-gray-500">No hay cursos registrados</p>
             <Link href="/admin/cursos/crear"
               class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2">
-              <i class="pi pi-plus"></i>
-              Crear primer curso
+            <i class="pi pi-plus"></i>
+            Crear primer curso
             </Link>
           </div>
 
@@ -41,7 +41,7 @@
                   </span>
                   <span v-if="curso.calificacion" class="flex items-center gap-1">
                     <i class="pi pi-star"></i>
-                    {{ curso.calificacion }}/5
+                    {{ curso.calificacion }}/100
                   </span>
                 </div>
                 <p v-if="curso.descripcion" class="text-sm text-gray-600 mt-2 line-clamp-2">
@@ -49,14 +49,26 @@
                 </p>
               </div>
 
-              <div class="flex gap-2">
-                <Link :href="`/admin/cursos/${curso.id}/editar`"
-                  class="p-button p-button-text p-button-sm text-blue-600 hover:bg-blue-100">
+              <div class="flex flex-col items-start gap-2 mt-3">
+                <div class="flex gap-2">
+                  <Link :href="`/admin/cursos/${curso.id}/temas`"
+                    class="p-button p-button-text p-button-sm text-green-600 hover:bg-blue-100">
+                  Añadir Temas
+                  </Link>
+                  <Link :href="`/admin/cursos/${curso.id}/editar`"
+                    class="p-button p-button-text p-button-sm text-blue-600 hover:bg-blue-100">
                   Editar
-                </Link>
-                <Button severity="danger" text @click="confirmDelete(curso)" class="hover:bg-red-100 text-red-600">
-                  Eliminar
-                </Button>
+                  </Link>
+                  <Button severity="danger" text @click="confirmDelete(curso)" class="hover:bg-red-100 text-red-600">
+                    Eliminar
+                  </Button>
+                </div>
+                  <Link :href="`/admin/cursos/${curso.id}/tests/crear`"
+                    class="bg-blue-600 text-white px-3 py-1 text-sm rounded-md hover:bg-blue-700 transition-colors flex items-center gap-2">
+                  <i class="pi pi-plus"></i>
+                  Agregar Test
+                  </Link>
+                
               </div>
             </div>
           </div>
@@ -79,12 +91,10 @@
               </div>
             </div>
 
-            <!-- Mensaje -->
             <div class="p-6">
               <p class="text-gray-700">{{ message.message }}</p>
             </div>
 
-            <!-- Footer -->
             <div class="flex gap-3 p-6 border-t border-gray-200 bg-gray-50 rounded-b-lg">
               <button @click="rejectCallback"
                 class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors font-medium">

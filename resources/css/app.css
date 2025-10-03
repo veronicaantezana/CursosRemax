@@ -1,5 +1,12 @@
 @import 'tailwindcss';
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'tailwindcss-primeui';
+
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
@@ -18,3 +25,4 @@ svg {
   display: inline-block;
   vertical-align: middle;
 }
+

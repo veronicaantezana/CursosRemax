@@ -35,6 +35,7 @@ import AuthLayout from '@/Layouts/AuthLayout.vue';
 import LoginForm from '@/Components/Auth/LoginForm.vue';
 import { useAuthStore } from '@/stores/authStore';
 import { ref } from 'vue';
+
 import { router } from '@inertiajs/vue3';
 
 const authStore = useAuthStore();
@@ -48,7 +49,7 @@ const handleSubmit = async (formData) => {
         username: formData.username,
         password: formData.password
     };
-    console.log(' Enviando a authStore:', credentials);
+    //console.log(' Enviando a authStore:', credentials);
     await authStore.login(credentials);
 };
 

@@ -10,7 +10,6 @@ class CursoDto
         public ?string $descripcion = null,
         public ?string $imagen = null,
         public int $tiempoVigencia,
-        public ?float $calificacion = null
     ) {}
 
     public static function fromRequest(array $data): self
@@ -21,7 +20,7 @@ class CursoDto
             descripcion: $data['descripcion'] ?? null,
             imagen: $data['imagen'] ?? null,
             tiempoVigencia: (int)$data['tiempoVigencia'],
-            calificacion: isset($data['calificacion']) ? (float)$data['calificacion'] : null
+           
         );
     }
 
@@ -33,7 +32,7 @@ class CursoDto
             'descripcion' => $this->descripcion,
             'imagen' => $this->imagen,
             'tiempoVigencia' => $this->tiempoVigencia,
-            'calificacion' => $this->calificacion
+            
         ];
     }
 }

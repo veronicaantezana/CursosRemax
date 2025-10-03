@@ -13,7 +13,17 @@ return new class extends Migration
     {
         Schema::create('preguntas', function (Blueprint $table) {
             $table->id();
-            $table->string('texto');
+            $table->foreignId('test_id')->constrained('tests')->onDelete('cascade');
+            $table->text('enunciado');
+            $table->enum('tipo', [
+                'seleccion_unica',     
+                'seleccion_multiple',   
+                'verdadero_falso',     
+                'respuesta_corta',     
+                'respuesta_larga'      
+            ])->default('seleccion_unica');
+            $table->integer('orden')->default(0);
+            $table->decimal('puntaje');
             $table->timestamps();
         });
     }
